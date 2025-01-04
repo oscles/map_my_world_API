@@ -1,12 +1,15 @@
+import uuid
 from datetime import datetime
 from typing import Optional
 
-from sqlmodel import DateTime, Field, SQLModel
+from sqlmodel import Field, SQLModel
 
 
 class Category(SQLModel, table=True):
     __tablename__ = "categories"
-    id: int | None = Field(default=None, primary_key=True)
+    id: uuid.UUID | None = Field(
+        default_factory=uuid.uuid4, primary_key=True, nullable=False, index=True
+    )
     name: str = Field(unique=True, nullable=False, index=True)
     description: str = Field(nullable=False)
-    created_at: Optional[DateTime] = Field(DateTime, default=datetime.now)
+    created_at: Optional[str] = Field(default=datetime.now().strftime("%Y-%m-%d"))
