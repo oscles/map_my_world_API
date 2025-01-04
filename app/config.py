@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     app_name: str = "Map My World"
     environment: str = os.getenv("ENVIRONMENT", "dev")
     testing: bool = os.getenv("TESTING", 0)
+    database_url: str = os.getenv("DATABASE_URL", "sqlite:///./map-my-world.db")
 
 
 @lru_cache()
