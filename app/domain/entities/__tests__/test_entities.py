@@ -8,7 +8,10 @@ from app.models.review import LocationCategoryReview
 
 def test_location_creation():
     location = Location(
-        id=uuid4(), latitude=40.7128, longitude=-74.0060, name="New York City"
+        id=uuid4(),
+        latitude=40.7128,
+        longitude=-74.0060,
+        name="New York City",
     )
 
     assert math.isclose(location.latitude, 40.7128, rel_tol=1e-9)

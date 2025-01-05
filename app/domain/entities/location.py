@@ -1,12 +1,14 @@
-from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
+from pydantic import BaseModel, Field
 
-@dataclass
-class Location:
+
+class Location(BaseModel):
     id: UUID | None
-    latitude: float
-    longitude: float
-    name: str
-    created_at: datetime | None = None
+    latitude: float = Field(..., description="Latitude of the location")
+    longitude: float = Field(..., description="Longitude of the location")
+    name: str = Field(..., description="Name of the location")
+    created_at: datetime = Field(
+        default_factory=datetime.now, description="Creation timestamp"
+    )
