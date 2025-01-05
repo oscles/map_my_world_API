@@ -1,3 +1,3 @@
-from .category import Category
-from .location import Location
-from .review import LocationCategoryReview
+from .category import *
+from .location import *
+from .review import *

@@ -7,7 +7,13 @@ from fastapi import Depends, FastAPI, Query
 from sqlmodel import select
 
 from app.config import Settings, get_settings
-from app.models import Category, Location, LocationCategoryReview
+from app.models import (
+    Category,
+    CreateCategoryDto,
+    CreateLocationDto,
+    Location,
+    LocationCategoryReview,
+)
 from app.utils.database import Session, create_db_and_tables, get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -19,7 +25,12 @@ async def lifespan(_app: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="Map My World API",
+    description="API for managing locations, categories, and exploration recommendations",
+    version="1.0.0",
+    lifespan=lifespan,
+)
 fake = Faker()
 
 
@@ -32,7 +43,7 @@ def health_check(settings: Settings = Depends(get_settings)):
     }
 
 
-@app.get("/locations")
+@app.get("/locations", tags=["Locations"])
 def get_locations(
     session: SessionDep,
     offset: int = 0,
@@ -42,7 +53,19 @@ def get_locations(
     return locations
 
 
-@app.get("/categories")
+@app.post("/locations", response_model=CreateLocationDto, tags=["Locations"])
+def create_location(location: CreateLocationDto, session: SessionDep) -> Location:
+    """
+    Create a new location with the given latitude, longitude, and name.
+    """
+    db_location = Location(**location.model_dump())
+    session.add(db_location)
+    session.commit()
+    session.refresh(db_location)
+    return db_location
+
+
+@app.get("/categories", tags=["Categories"])
 def get_categories(
     session: SessionDep,
     offset: int = 0,
@@ -52,7 +75,19 @@ def get_categories(
     return categories
 
 
-@app.get("/explorer/recommendations/")
+@app.post("/categories", response_model=CreateCategoryDto, tags=["Categories"])
+def create_category(category: CreateCategoryDto, session: SessionDep) -> Location:
+    """
+    Create a new category with the given name and description.
+    """
+    db_category = Category(**category.model_dump())
+    session.add(db_category)
+    session.commit()
+    session.refresh(db_category)
+    return db_category
+
+
+@app.get("/explorer/recommendations/", tags=["Recommendations"])
 def get_recommendations(
     session: SessionDep,
     limit: Annotated[int, Query(le=10)] = 10,
