@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class Location(BaseModel):
-    id: UUID | None
+    id: UUID | None = Field(default=None)
     latitude: float = Field(..., description="Latitude of the location")
     longitude: float = Field(..., description="Longitude of the location")
     name: str = Field(..., description="Name of the location")
