@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
+from uuid import UUID
 
 
 @dataclass
 class LocationCategoryReview:
-    id: int | None
+    id: UUID | None
     location_id: int
     category_id: int
-    last_reviewed_at: datetime
+    last_reviewed_at: Optional[datetime] = None
