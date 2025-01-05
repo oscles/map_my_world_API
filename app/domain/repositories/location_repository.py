@@ -10,5 +10,5 @@ class LocationRepository(ABC):
         pass
 
     @abstractmethod
-    async def all(self) -> List[Location] | None:
+    async def all(self, offset: int = 0, limit: int = 100) -> List[Location] | None:
         pass

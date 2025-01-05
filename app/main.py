@@ -23,7 +23,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.include_router(locations.router, tags=["Locations-DDD"])
+app.include_router(locations.router, tags=["Locations"])
 
 
 @app.get("/health-check")
@@ -33,28 +33,6 @@ def health_check(settings: Settings = Depends(get_settings)):
         "environment": settings.environment,
         "testing": settings.testing,
     }
-
-
-# @app.get("/locations", tags=["Locations"])
-# def get_locations(
-#     session: SessionDep,
-#     offset: int = 0,
-#     limit: Annotated[int, Query(le=100)] = 100,
-# ) -> list[Location]:
-#     locations = session.exec(select(Location).offset(offset).limit(limit)).all()
-#     return locations
-
-
-# @app.post("/locations", response_model=CreateLocationDto, tags=["Locations"])
-# def create_location(location: CreateLocationDto, session: SessionDep) -> Location:
-#     """
-#     Create a new location with the given latitude, longitude, and name.
-#     """
-#     db_location = Location(**location.model_dump())
-#     session.add(db_location)
-#     session.commit()
-#     session.refresh(db_location)
-#     return db_location
 
 
 # @app.get("/categories", tags=["Categories"])

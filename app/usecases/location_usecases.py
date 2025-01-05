@@ -14,5 +14,5 @@ class GetAllLocationsUseCase:
     def __init__(self, location_repository: LocationRepository):
         self.location_repository = location_repository
 
-    async def execute(self) -> Location:
-        return await self.location_repository.all()
+    async def execute(self, offset: int = 0, limit: int = 100) -> Location:
+        return await self.location_repository.all(offset, limit)
