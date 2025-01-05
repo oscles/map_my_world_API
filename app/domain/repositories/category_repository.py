@@ -10,5 +10,5 @@ class CategoryRepository(ABC):
         pass
 
     @abstractmethod
-    async def all(self) -> List[Category] | None:
+    async def all(self, offset: int = 0, limit: int = 100) -> List[Category] | None:
         pass

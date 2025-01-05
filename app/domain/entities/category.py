@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class Category(BaseModel):
-    id: UUID | None
+    id: UUID | None = Field(default=None)
     name: str = Field(..., description="Name of the category")
     description: str = Field(..., description="Description of the category")
     created_at: datetime = Field(

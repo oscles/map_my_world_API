@@ -12,7 +12,9 @@ from app.domain.repositories.location_repository import LocationRepository
 class LocationModel(SQLModel, table=True):
     __tablename__ = "locations"
 
-    id: str | None = Field(default=str(uuid4()), primary_key=True)
+    id: str | None = Field(
+        default=str(uuid4()), primary_key=True, index=True, unique=True
+    )
     latitude: str = Field(nullable=False)
     longitude: str = Field(nullable=False)
     name: str = Field(nullable=False, index=True)

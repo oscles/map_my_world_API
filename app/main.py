@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import Depends, FastAPI
 
 from app.config import Settings, get_settings
-from app.infrastructure.api.routes import locations
+from app.infrastructure.api.routes import category, locations
 from app.utils.database import Session, create_db_and_tables, get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -24,6 +24,7 @@ app = FastAPI(
 )
 
 app.include_router(locations.router, tags=["Locations"])
+app.include_router(category.router, tags=["Categories"])
 
 
 @app.get("/health-check")
@@ -33,28 +34,6 @@ def health_check(settings: Settings = Depends(get_settings)):
         "environment": settings.environment,
         "testing": settings.testing,
     }
-
-
-# @app.get("/categories", tags=["Categories"])
-# def get_categories(
-#     session: SessionDep,
-#     offset: int = 0,
-#     limit: Annotated[int, Query(le=100)] = 100,
-# ) -> list[Category]:
-#     categories = session.exec(select(Category).offset(offset).limit(limit)).all()
-#     return categories
-
-
-# @app.post("/categories", response_model=CreateCategoryDto, tags=["Categories"])
-# def create_category(category: CreateCategoryDto, session: SessionDep) -> Location:
-#     """
-#     Create a new category with the given name and description.
-#     """
-#     db_category = Category(**category.model_dump())
-#     session.add(db_category)
-#     session.commit()
-#     session.refresh(db_category)
-#     return db_category
 
 
 # @app.get("/explorer/recommendations/", tags=["Recommendations"])
