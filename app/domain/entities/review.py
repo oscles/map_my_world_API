@@ -1,12 +1,8 @@
-from dataclasses import dataclass
-from datetime import datetime
-from typing import Optional
-from uuid import UUID
+from pydantic import BaseModel
 
 
-@dataclass
-class LocationCategoryReview:
-    id: UUID | None
-    location_id: int
-    category_id: int
-    last_reviewed_at: Optional[datetime] = None
+class LocationCategoryReview(BaseModel):
+    id: str | None
+    location_id: str
+    category_id: str
+    last_reviewed_at: str | None
