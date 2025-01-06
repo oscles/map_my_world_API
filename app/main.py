@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI
 
 from app.config import Settings, get_settings
 from app.infrastructure.api.routes import category, locations, review
-from app.utils.database import create_db_and_tables
+from app.infrastructure.database import create_db_and_tables
 
 
 @asynccontextmanager
