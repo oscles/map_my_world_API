@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query
 
 from app.domain.entities.location import Location
 from app.infrastructure.api.dependencies import get_location_repository
-from app.usecases.location_usecases import CreateLocationUseCase, GetAllLocationsUseCase
+from app.usecases.location_usecase import CreateLocationUseCase, GetAllLocationsUseCase
 
 router = APIRouter()
 
