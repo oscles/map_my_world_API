@@ -13,7 +13,7 @@ class CategoryModel(SQLModel, table=True):
     __tablename__ = "categories"
 
     id: str | None = Field(
-        default=str(uuid4()), primary_key=True, index=True, unique=True
+        default_factory=lambda: str(uuid4()), primary_key=True, index=True, unique=True
     )
     name: str = Field(unique=True, nullable=False, index=True)
     description: str = Field(nullable=False)

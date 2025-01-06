@@ -13,7 +13,7 @@ class LocationModel(SQLModel, table=True):
     __tablename__ = "locations"
 
     id: str | None = Field(
-        default=str(uuid4()), primary_key=True, index=True, unique=True
+        default_factory=lambda: str(uuid4()), primary_key=True, index=True, unique=True
     )
     latitude: str = Field(nullable=False)
     longitude: str = Field(nullable=False)
