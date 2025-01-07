@@ -1,24 +1,11 @@
-from datetime import datetime
-from typing import Annotated, Optional
-from uuid import uuid4
+from typing import Annotated
 
 from fastapi import Query
-from sqlmodel import Field, Session, SQLModel, select
+from sqlmodel import Session, select
 
 from app.domain.entities.location import Location
 from app.domain.repositories.location_repository import LocationRepository
-
-
-class LocationModel(SQLModel, table=True):
-    __tablename__ = "locations"
-
-    id: str | None = Field(
-        default_factory=lambda: str(uuid4()), primary_key=True, index=True, unique=True
-    )
-    latitude: str = Field(nullable=False)
-    longitude: str = Field(nullable=False)
-    name: str = Field(nullable=False, index=True)
-    created_at: Optional[str] = Field(default=datetime.now().strftime("%Y-%m-%d"))
+from app.infrastructure.models.models import LocationModel
 
 
 class SQLLiteLocationRepository(LocationRepository):

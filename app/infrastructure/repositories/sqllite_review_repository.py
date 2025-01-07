@@ -1,18 +1,9 @@
 from datetime import datetime, timedelta
-from typing import List, Optional
 
-from sqlmodel import Field, Session, SQLModel, or_, select
+from sqlmodel import Session, or_, select
 
 from app.domain.repositories.review_repository import LocationCategoryReviewRepository
-
-
-class LocationCategoryReviewModel(SQLModel, table=True):
-    __tablename__ = "location_category_reviewed"
-
-    id: str = Field(primary_key=True, index=True, unique=True)
-    location_id: str = Field(foreign_key="locations.id")
-    category_id: str = Field(foreign_key="categories.id")
-    last_reviewed_at: Optional[str] = Field(default=None)
+from app.infrastructure.models.models import LocationCategoryReviewModel
 
 
 class SQLLiteLocationCategoryReviewRepository(LocationCategoryReviewRepository):
@@ -22,24 +13,30 @@ class SQLLiteLocationCategoryReviewRepository(LocationCategoryReviewRepository):
     async def get_recommendations(
         self,
         limit: int = 10,
-    ) -> List[LocationCategoryReviewModel]:
+    ):
         """
         Get 10 location-category combinations that need review, prioritizing those never reviewed
         and those not reviewed in the last 30 days.
         """
 
         # Subquery to get all reviewed combinations
-        thirty_days_ago = datetime.now() - timedelta(days=30)
+        thirty_days_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
 
         needs_review = self.session.exec(
             select(LocationCategoryReviewModel)
             .where(
                 or_(
-                    LocationCategoryReviewModel.last_reviewed_at is None,
+                    LocationCategoryReviewModel.last_reviewed_at.is_(None),
+                    LocationCategoryReviewModel.last_reviewed_at == "",
                     LocationCategoryReviewModel.last_reviewed_at < thirty_days_ago,
                 )
             )
-            .order_by(LocationCategoryReviewModel.last_reviewed_at)
+            .join(LocationCategoryReviewModel.location)
+            .join(LocationCategoryReviewModel.category)
+            .order_by(
+                LocationCategoryReviewModel.last_reviewed_at.is_(None).desc(),
+                LocationCategoryReviewModel.last_reviewed_at.asc(),
+            )
             .limit(limit)
         ).all()
 

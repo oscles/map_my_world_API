@@ -1,23 +1,11 @@
-from datetime import datetime
-from typing import Annotated, Optional
-from uuid import uuid4
+from typing import Annotated
 
 from fastapi import Query
-from sqlmodel import Field, Session, SQLModel, select
+from sqlmodel import Session, select
 
 from app.domain.entities.category import Category
 from app.domain.repositories.category_repository import CategoryRepository
-
-
-class CategoryModel(SQLModel, table=True):
-    __tablename__ = "categories"
-
-    id: str | None = Field(
-        default_factory=lambda: str(uuid4()), primary_key=True, index=True, unique=True
-    )
-    name: str = Field(unique=True, nullable=False, index=True)
-    description: str = Field(nullable=False)
-    created_at: Optional[str] = Field(default=datetime.now().strftime("%Y-%m-%d"))
+from app.infrastructure.models.models import CategoryModel
 
 
 class SQLLiteCategoryRepository(CategoryRepository):
